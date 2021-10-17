@@ -1,25 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import FlashcardsScreen from "./screens/FlashcardsScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import FlashcardAddScreen from "./screens/FlashcardAddScreen";
+
+const DrawerNavigation = createDrawerNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Fiszki!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <DrawerNavigation.Navigator initialRouteName="Home">
+        <DrawerNavigation.Screen name="Home" component={FlashcardsScreen} />
+        <DrawerNavigation.Screen name="Dodaj fiszkę!" component={FlashcardAddScreen} />
+      </DrawerNavigation.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 80,
-    marginBottom: '100%'
-  }
-});
