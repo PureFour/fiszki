@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import Button from "../components/Button";
 import { Flashcard } from "../models/flashcard";
-import { Storage, STORAGE_KEYS } from "../services/store";
+import FlashcardsService from "../services/flashcardsService";
 import Colors from "../themes/colors";
+import uuid from "react-native-uuid";
 
 const FlashcardAddScreen = () => {
   const [newFlashcardText, setNewFlashcardText] = useState<string>("");
@@ -12,26 +13,24 @@ const FlashcardAddScreen = () => {
     useState<string>("");
 
   const addNewCard = () => {
+    if (!newFlashcardText || !newFlashcardSecondText) {
+      return;
+    }
+
     const newFlashcard: Flashcard = {
+      id: uuid.v4().toString(),
       frontText: newFlashcardText,
       backText: newFlashcardSecondText,
     };
-    if (!newFlashcard.backText || !newFlashcardSecondText) {
-      return;
-    }
-    setNewFlashcardText("");
-    setNewFlashcardSecondText("");
-    saveNewFlashcard(newFlashcard);
-  };
 
-  const saveNewFlashcard = async (flashcard: Flashcard) => {
-    const currentFlashcards: Flashcard[] = await Storage.getData(
-      STORAGE_KEYS.FLASHCARDS.valueOf()
-    );
-
-    const updatedFlashcards = [...currentFlashcards, flashcard];
-    Storage.saveData(updatedFlashcards, STORAGE_KEYS.FLASHCARDS.valueOf());
-    return updatedFlashcards;
+    FlashcardsService.saveNewFlashcard(newFlashcard)
+      .catch((err) => {
+        console.log("error: " + err);
+      })
+      .finally(() => {
+        setNewFlashcardText("");
+        setNewFlashcardSecondText("");
+      });
   };
 
   return (

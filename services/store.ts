@@ -10,11 +10,11 @@ export const Storage = {
         try {
             await AsyncStorage.setItem(storageKey, jsonValue);
             console.log(
-                "Saved [key: " + storageKey + "data: " + jsonValue + "]"
+                "Saved [key: " + storageKey + ", data: " + jsonValue + "]"
             );
         } catch (e) {
             console.log(
-                "Error saving [key: " + storageKey + "data: " + jsonValue + "]"
+                "Error saving [key: " + storageKey + ", data: " + jsonValue + "]"
             );
         }
     },

@@ -1,39 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import Colors from "../themes/colors";
 import { Flashcard } from "../models/flashcard";
-import { Storage, STORAGE_KEYS } from "../services/store";
 import FlashcardSwiper from "../components/FlashcardSwiper";
-
-const mockedFlashcards: Flashcard[] = [
-  { frontText: "Apple", backText: "Jabłko" },
-  { frontText: "Ball", backText: "Piłka" },
-];
+import FlashcardsService from "../services/flashcardsService";
 
 export default function FlashcardsScreen() {
   //states
-  const [flashcards, setFlashcards] = useState<Flashcard[]>(mockedFlashcards);
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
 
   //initialize flashcards from local database
   useEffect(() => {
-    loadFlashcards();
-  }, [mockedFlashcards]);
-
-  const loadFlashcards = async () => {
-    const flashcards: Flashcard[] = await Storage.getData(
-      STORAGE_KEYS.FLASHCARDS.valueOf()
-    );
-    flashcards !== null
-      ? setFlashcards(flashcards)
-      : setFlashcards(mockedFlashcards);
-  };
+    FlashcardsService.loadFlashcards().then((flashcards) => {
+      setFlashcards(flashcards);
+    });
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlashcardSwiper flashcards={flashcards} />
       <StatusBar style="auto" hidden={true} />
-    </View>
+    </SafeAreaView>
   );
 }
 
